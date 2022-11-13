@@ -40,10 +40,10 @@ function createData(nome: string, nivel: string, id: string): CursoInterface {
 type Props = {
     listCursos: [];
     loading: boolean;
-    reload?:any
+    reload?: any
 }
 
-export default function TabelaCursos({listCursos, loading,reload}: Props) {
+export default function TabelaCursos({listCursos, loading, reload}: Props) {
 
 
     const [page, setPage] = useState(0);
@@ -56,7 +56,6 @@ export default function TabelaCursos({listCursos, loading,reload}: Props) {
     useEffect(() => {
         handleFormatRowsTable(listCursos);
     }, [listCursos]);
-
 
     const handleChangePage = (event: unknown, newPage: number) => {
         setPage(newPage);
@@ -84,7 +83,6 @@ export default function TabelaCursos({listCursos, loading,reload}: Props) {
     const handleCloseDialog = () => {
         setOpenDialog(false);
     };
-
 
     const handleDeleteItem = async () => {
         await CursoService.delete(idSelected);

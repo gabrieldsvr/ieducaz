@@ -18,10 +18,10 @@ const MainRoutes = () => {
             <Route path="/" element={<Home/>}/>
 
             <Route path="/alunos" element={<Alunos/>}/>
-            <Route path="/alunos/adicionar" element={<AdicionarAlunos/>}/>
+            <Route path="/alunos/criar" element={<AdicionarAlunos/>}/>
 
             <Route path="/turmas" element={<Turmas/>}/>
-            <Route path="/turmas/adicionar" element={<AdicionarTurmas/>}/>
+            <Route path="/turmas/criar" element={<AdicionarTurmas/>}/>
 
             <Route path="/cursos" element={<Cursos/>}/>
             <Route path="/cursos/criar" element={<AdicionarCursos/>}/>
