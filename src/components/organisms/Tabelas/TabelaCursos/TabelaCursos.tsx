@@ -11,6 +11,8 @@ import {LoadingSpinner} from "../../../atoms/LoadingSpinner/LoadingSpinner";
 import {Delete, Edit} from "@mui/icons-material";
 import {IconButton} from "@mui/material";
 import {Link} from "react-router-dom";
+import {AlertDialog} from "../../../molecules/AlertDialog/AlertDialog";
+import {CursoService} from "../../../../services/CursoService";
 
 interface Column {
     id: 'nome' | 'nivel';
@@ -37,17 +39,19 @@ function createData(nome: string, nivel: string, id: string): CursoInterface {
 
 type Props = {
     listCursos: [];
-    loading: boolean
+    loading: boolean;
+    reload?:any
 }
 
-export default function TabelaCursos({listCursos, loading}: Props) {
+export default function TabelaCursos({listCursos, loading,reload}: Props) {
 
 
     const [page, setPage] = useState(0);
     const [cursos, setCursos] = useState<CursoInterface[]>([]);
-    const [rowsPerPage, setRowsPerPage] = useState(2);
-    const [popUp, setPopUp] = React.useState(false);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
 
+    const [openDialog, setOpenDialog] = React.useState<boolean>(false);
+    const [idSelected, setIdSelected] = React.useState<string>('');
 
     useEffect(() => {
         handleFormatRowsTable(listCursos);
@@ -73,9 +77,28 @@ export default function TabelaCursos({listCursos, loading}: Props) {
         setCursos(listCursoss)
     };
 
+    const handleClickOpenDialog = () => {
+        setOpenDialog(true);
+    };
+
+    const handleCloseDialog = () => {
+        setOpenDialog(false);
+    };
+
+
+    const handleDeleteItem = async () => {
+        await CursoService.delete(idSelected);
+        reload()
+        handleCloseDialog()
+    };
 
     return (
         <>
+            <AlertDialog handleClose={handleCloseDialog}
+                         handleConfirm={handleDeleteItem}
+                         state={openDialog}
+                         title={'Você tem certeza?'}
+                         text={"Se você excluir perderar os dados permanentemente!"}/>
             {
                 loading ?
                     (<LoadingSpinner/>) :
@@ -104,7 +127,7 @@ export default function TabelaCursos({listCursos, loading}: Props) {
                                     {cursos
                                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                         .map((row: CursoInterface) => {
-                                            let id_row;
+                                            let id_row: string = "";
                                             return (
                                                 <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                                                     {columns.map((column) => {
@@ -124,10 +147,15 @@ export default function TabelaCursos({listCursos, loading}: Props) {
                                                                 <Edit/>
                                                             </IconButton>
                                                         </Link>
-                                                            <IconButton color="error" aria-label="Editar"
-                                                                        component="label">
-                                                                <Delete/>
-                                                            </IconButton>
+                                                        <IconButton color="error" aria-label="Excluir"
+                                                                    component="label"
+                                                                    onClick={() => {
+                                                                        handleClickOpenDialog()
+                                                                        setIdSelected(id_row)
+
+                                                                    }}>
+                                                            <Delete/>
+                                                        </IconButton>
                                                     </TableCell>
                                                 </TableRow>
                                             );

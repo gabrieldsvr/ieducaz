@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE = 'http://127.0.0.1:8000/api';
+const BASE = 'https://ieducaz-backend.adminsystem.com.br/api';
 
 const paths = {
     'INDEX': '/cursos',
